@@ -16,14 +16,9 @@ module.exports = {
 
     async execute(interaction, config) {
         // Sprawdź czy użytkownik ma rolę pracowniczą
-        const hasPracownicza = interaction.member.roles.cache.some(r =>
-            config.roles.pracownicze.includes(r.id)
-        );
+        const hasPracownicza = interaction.member.roles.cache.some(r => config.roles.pracownicze.includes(r.id));
         if (!hasPracownicza) {
-            return interaction.reply({
-                content: '❌ Tylko **pracownicy** mogą składać wnioski urlopowe.',
-                ephemeral: true,
-            });
+            return interaction.reply({ content: '❌ Tylko **Pracownicy** mogą używać tej komendy.', ephemeral: true });
         }
 
         const modal = new ModalBuilder()

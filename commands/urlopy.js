@@ -17,14 +17,9 @@ module.exports = {
         .setDescription('Wypisuje wszystkich pracowników aktualnie na urlopie'),
 
     async execute(interaction, config) {
-        const hasRole = interaction.member.roles.cache.some(r =>
-            config.roles.pracownicze.includes(r.id)
-        );
+        const hasRole = interaction.member.roles.cache.some(r => config.roles.zarzad.includes(r.id));
         if (!hasRole) {
-            return interaction.reply({
-                content: '❌ Tylko **pracownicy** mogą używać tej komendy.',
-                ephemeral: true,
-            });
+            return interaction.reply({ content: '❌ Tylko **Zarząd** może używać tej komendy.', ephemeral: true });
         }
 
         await interaction.deferReply({ ephemeral: false });

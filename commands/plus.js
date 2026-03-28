@@ -14,6 +14,12 @@ module.exports = {
             .setRequired(true)),
 
     async execute(interaction, config) {
+        // Sprawdź uprawnienia Top 4
+        const hasRole = interaction.member.roles.cache.some(r => config.roles.pracownicze.slice(-4).includes(r.id));
+        if (!hasRole) {
+            return interaction.reply({ content: '❌ Tylko **Zarząd i Kierownictwo** może używać tej komendy.', ephemeral: true });
+        }
+
         await interaction.deferReply({ ephemeral: true });
 
         const target = interaction.options.getMember('uzytkownik');

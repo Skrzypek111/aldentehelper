@@ -2,58 +2,58 @@
     "roles": {
         "_komentarz_zarzad": "Tylko 3 ostatnie rangi zarzadu moga uzywac komend HR (/zatrudnij, /zwolnij, /awans, /degrad)",
         "zarzad": [
-            "",
-            "",
-            ""
+            "ID_RANGI_ZARZAD_1 (Najwyższa)",
+            "ID_RANGI_ZARZAD_2",
+            "ID_RANGI_ZARZAD_3 (Najniższa)"
         ],
-        "urlop": "",
-        "oczekujacy": "",
-        "kadrowa": "",
-        "domyslna": "",
+        "urlop": "ID_RANGI_URLOPOWEJ",
+        "oczekujacy": "ID_RANGI_OCZEKUJACY",
+        "kadrowa": "ID_RANGI_KADROWA",
+        "domyslna": "ID_RANGI_DOMYSLNA (np. bezrobotny)",
         "_komentarz_pracownicze": "9 rang w kolejnosci od najnizszej: 5 pracowniczych + 4 zarzadowe",
         "pracownicze": [
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            ""
+            "ID_PRAC_1 (Stażysta - Najniższa)",
+            "ID_PRAC_2",
+            "ID_PRAC_3",
+            "ID_PRAC_4",
+            "ID_PRAC_5 (Najwyższa ranga zwykła)",
+            "ID_KIER_1 (Najniższa ranga kierownicza - 4 od góry)",
+            "ID_KIER_2 (Zarzad 3)",
+            "ID_KIER_3 (Zarzad 2)",
+            "ID_KIER_4 (Zarzad 1 - Najwyższa)"
         ],
         "minusy": [
-            "",
-            "",
-            ""
+            "ID_RANGI_MINUS_1/3",
+            "ID_RANGI_MINUS_2/3",
+            "ID_RANGI_MINUS_3/3"
         ],
         "plusy": [
-            "",
-            "",
-            "",
-            "",
-            ""
+            "ID_RANGI_PLUS_1/5",
+            "ID_RANGI_PLUS_2/5",
+            "ID_RANGI_PLUS_3/5",
+            "ID_RANGI_PLUS_4/5",
+            "ID_RANGI_PLUS_5/5"
         ],
         "pochwaly": [
-            "",
-            ""
+            "ID_RANGI_POCHWALA_1/2",
+            "ID_RANGI_POCHWALA_2/2"
         ],
         "upomnienia": [
-            "",
-            ""
+            "ID_RANGI_UPOMNIENIE_1/2",
+            "ID_RANGI_UPOMNIENIE_2/2"
         ]
     },
     "channels": {
-        "zatrudnienia": "",
-        "zwolnienia": "",
-        "awanse": "",
-        "degrady": "",
-        "plusy": "",
-        "minusy": "",
-        "kanalZarzadu": "",
-        "wyplaty": "",
-        "urlopy": "",
-        "pochwaly": "",
-        "upomnienia": ""
+        "zatrudnienia": "ID_KANALU_ZATRUDNIENIA",
+        "zwolnienia": "ID_KANALU_ZWOLNIENIA",
+        "awanse": "ID_KANALU_AWANSE",
+        "degrady": "ID_KANALU_DEGRADY",
+        "plusy": "ID_KANALU_PLUSY",
+        "minusy": "ID_KANALU_MINUSY",
+        "kanalZarzadu": "ID_KANALU_ZARZADU (Alerty 5/5)",
+        "wyplaty": "ID_KANALU_WYPLATY",
+        "urlopy": "ID_KANALU_URLOPY",
+        "pochwaly": "ID_KANALU_POCHWALY",
+        "upomnienia": "ID_KANALU_UPOMNIENIA"
     }
 }
