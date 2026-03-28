@@ -18,7 +18,7 @@ module.exports = {
         // Sprawdź uprawnienia zarządu
         const hasRole = interaction.member.roles.cache.some(r => config.roles.zarzad.includes(r.id));
         if (!hasRole) {
-            return interaction.reply({ content: '❌ Tylko **Zarząd** może używać tej komendy.', ephemeral: true });
+            return interaction.reply({ content: '❌ Brak uprawnień do używania tej komendy.', ephemeral: true });
         }
 
         await interaction.deferReply({ ephemeral: true });

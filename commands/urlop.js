@@ -18,7 +18,7 @@ module.exports = {
         // Sprawdź czy użytkownik ma rolę pracowniczą
         const hasPracownicza = interaction.member.roles.cache.some(r => config.roles.pracownicze.includes(r.id));
         if (!hasPracownicza) {
-            return interaction.reply({ content: '❌ Tylko **Pracownicy** mogą używać tej komendy.', ephemeral: true });
+            return interaction.reply({ content: '❌ Brak uprawnień do używania tej komendy.', ephemeral: true });
         }
 
         const modal = new ModalBuilder()
