@@ -2,7 +2,7 @@ const { Client, GatewayIntentBits, Collection, EmbedBuilder, ActionRowBuilder, B
 const fs   = require('fs');
 const path = require('path');
 require('dotenv').config();
-const config = require('./config.json');
+const config = require('./config.js');
 
 // ── Plik z danymi aktywnych urlopów ────────────────────────────────────────────
 const URLOPY_FILE = path.join(__dirname, 'urlopy_data.json');
