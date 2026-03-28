@@ -2,58 +2,58 @@
     "roles": {
         "_komentarz_zarzad": "Tylko 3 ostatnie rangi zarzadu moga uzywac komend HR (/zatrudnij, /zwolnij, /awans, /degrad)",
         "zarzad": [
-            "ID_RANGI_ZARZAD_1 (Najwyższa)",
-            "ID_RANGI_ZARZAD_2",
-            "ID_RANGI_ZARZAD_3 (Najniższa)"
+            "1346801911956770818",
+            "1483553549496614923",
+            "1483553258155937914"
         ],
-        "urlop": "ID_RANGI_URLOPOWEJ",
-        "oczekujacy": "ID_RANGI_OCZEKUJACY",
-        "kadrowa": "ID_RANGI_KADROWA",
-        "domyslna": "ID_RANGI_DOMYSLNA (np. bezrobotny)",
+        "urlop": "1346794560545624156",
+        "oczekujacy": "1478915352888086731",
+        "kadrowa": "1398990466627665990",
+        "domyslna": "1319804867178401833",
         "_komentarz_pracownicze": "9 rang w kolejnosci od najnizszej: 5 pracowniczych + 4 zarzadowe",
         "pracownicze": [
-            "ID_PRAC_1 (Stażysta - Najniższa)",
-            "ID_PRAC_2",
-            "ID_PRAC_3",
-            "ID_PRAC_4",
-            "ID_PRAC_5 (Najwyższa ranga zwykła)",
-            "ID_KIER_1 (Najniższa ranga kierownicza - 4 od góry)",
-            "ID_KIER_2 (Zarzad 3)",
-            "ID_KIER_3 (Zarzad 2)",
-            "ID_KIER_4 (Zarzad 1 - Najwyższa)"
+            "1478915343706619996",
+            "1478915347624099962",
+            "1478915347519115346",
+            "1478915348358107216",
+            "1478915349272596615",
+            "1478915350954381334",
+            "1483553258155937914",
+            "1483553549496614923",
+            "1346801911956770818"
         ],
         "minusy": [
-            "ID_RANGI_MINUS_1/3",
-            "ID_RANGI_MINUS_2/3",
-            "ID_RANGI_MINUS_3/3"
+            "1478911160437964830",
+            "1478914498713747456",
+            "1478914499489562737"
         ],
         "plusy": [
-            "ID_RANGI_PLUS_1/5",
-            "ID_RANGI_PLUS_2/5",
-            "ID_RANGI_PLUS_3/5",
-            "ID_RANGI_PLUS_4/5",
-            "ID_RANGI_PLUS_5/5"
+            "1478911143735984280",
+            "1478911152317661285",
+            "1478911159917613228",
+            "1478914503872610364",
+            "1478914504455753880"
         ],
         "pochwaly": [
-            "ID_RANGI_POCHWALA_1/2",
-            "ID_RANGI_POCHWALA_2/2"
+            "1478914504829042742",
+            "1478914505831616632"
         ],
         "upomnienia": [
-            "ID_RANGI_UPOMNIENIE_1/2",
-            "ID_RANGI_UPOMNIENIE_2/2"
+            "1478914502127915149",
+            "1478914503042400378"
         ]
     },
     "channels": {
-        "zatrudnienia": "ID_KANALU_ZATRUDNIENIA",
-        "zwolnienia": "ID_KANALU_ZWOLNIENIA",
-        "awanse": "ID_KANALU_AWANSE",
-        "degrady": "ID_KANALU_DEGRADY",
-        "plusy": "ID_KANALU_PLUSY",
-        "minusy": "ID_KANALU_MINUSY",
-        "kanalZarzadu": "ID_KANALU_ZARZADU (Alerty 5/5)",
-        "wyplaty": "ID_KANALU_WYPLATY",
-        "urlopy": "ID_KANALU_URLOPY",
-        "pochwaly": "ID_KANALU_POCHWALY",
-        "upomnienia": "ID_KANALU_UPOMNIENIA"
+        "zatrudnienia": "1478919047893483565",
+        "zwolnienia": "1478923470023823543",
+        "awanse": "1478917485381161154",
+        "degrady": "1487276290754216017",
+        "plusy": "1478917575495778435",
+        "minusy": "1487276482555285725",
+        "kanalZarzadu": "1478918379103453306",
+        "wyplaty": "1478918960849223691",
+        "urlopy": "1478922959295877175",
+        "pochwaly": "1478917575495778435",
+        "upomnienia": "1487276482555285725"
     }
 }
