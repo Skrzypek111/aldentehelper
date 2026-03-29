@@ -76,7 +76,7 @@ module.exports = {
             .setFooter({ text: 'System Upomnień · Pizzeria' });
 
         const logChannel = interaction.guild.channels.cache.get(config.channels.upomnienia);
-        if (logChannel) await logChannel.send({ embeds: [embed] });
+        if (logChannel) await logChannel.send({ content: `${target}`, embeds: [embed] });
 
         // Przy 2/2 → automatyczny minus
         if (newLevel === upomnienia.length - 1) {
@@ -118,7 +118,7 @@ module.exports = {
                         .setFooter({ text: 'System Ostrzeżeń · Pizzeria' });
 
                     const minusChannel = interaction.guild.channels.cache.get(config.channels.minusy);
-                    if (minusChannel) await minusChannel.send({ embeds: [minusEmbed] });
+                    if (minusChannel) await minusChannel.send({ content: `${target}`, embeds: [minusEmbed] });
 
                     // Alert zarządu przy 3/3 minusów
                     if (newMinusLevel === minusy.length - 1) {

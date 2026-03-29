@@ -72,7 +72,7 @@ module.exports = {
             .setFooter({ text: 'System Ostrzeżeń · Pizzeria' });
 
         const logChannel = interaction.guild.channels.cache.get(config.channels.minusy);
-        if (logChannel) await logChannel.send({ embeds: [embed] });
+        if (logChannel) await logChannel.send({ content: `${target}`, embeds: [embed] });
 
         // Alert zarządu przy 3/3
         if (newLevel === minusy.length - 1) {

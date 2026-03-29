@@ -2,15 +2,15 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('plus')
-        .setDescription('Nadaje plusa pracownikowi (maks. 5/5)')
+        .setName('usunplus')
+        .setDescription('Usuwa plusa pracownikowi')
         .addUserOption(o => o
             .setName('uzytkownik')
-            .setDescription('Osoba otrzymująca plusa')
+            .setDescription('Osoba której usuwasz plusa')
             .setRequired(true))
         .addStringOption(o => o
             .setName('powod')
-            .setDescription('Powód nadania plusa')
+            .setDescription('Powód usunięcia plusa')
             .setRequired(true)),
 
     async execute(interaction, config) {
@@ -38,57 +38,51 @@ module.exports = {
             }
         }
 
-        if (currentLevel >= plusy.length - 1) {
-            return interaction.editReply('⭐ Pracownik ma już **5/5 plusów**! Nie można dodać więcej.');
+        if (currentLevel === -1) {
+            return interaction.editReply('⚠️ Pracownik nie posiada żadnych plusów.');
         }
 
-        const newLevel = currentLevel + 1;
+        const newLevel = currentLevel - 1;
 
         try {
-            if (currentLevel >= 0) await target.roles.remove(plusy[currentLevel]).catch(() => { });
-            await target.roles.add(plusy[newLevel]);
+            // Usuń obecną rangę
+            await target.roles.remove(plusy[currentLevel]).catch(() => { });
+            // Nadaj poprzednią (jeśli level > 0)
+            if (newLevel >= 0) {
+                await target.roles.add(plusy[newLevel]);
+            }
         } catch (err) {
             console.error(err);
             return interaction.editReply('❌ Błąd podczas zmiany ról.');
         }
 
-        const levelLabel = `${newLevel + 1}/5`;
+        const oldLevelLabel = `${currentLevel + 1}/5`;
+        const newLevelLabel = newLevel >= 0 ? `${newLevel + 1}/5` : '0/5';
         const barFull = '🟩';
         const barEmpty = '⬛';
-        const bar = barFull.repeat(newLevel + 1) + barEmpty.repeat(plusy.length - newLevel - 1);
+        const bar = newLevel >= 0 
+            ? barFull.repeat(newLevel + 1) + barEmpty.repeat(plusy.length - newLevel - 1)
+            : barEmpty.repeat(plusy.length);
 
         const embed = new EmbedBuilder()
             .setColor(0xe74c3c)
-            .setTitle(`Plus Pracowniczy — ${levelLabel}`)
+            .setTitle(`Usunięcie Plusa — ${newLevelLabel}`)
             .addFields(
                 { name: 'Pracownik', value: `${target}`, inline: true },
                 { name: 'Przez', value: `${interaction.user}`, inline: true },
                 { name: 'Powód', value: powod, inline: false },
-                { name: 'Stan plusów', value: bar + `  **${levelLabel}**`, inline: false }
+                { name: 'Poprzedni stan', value: `**${oldLevelLabel}**`, inline: true },
+                { name: 'Nowy stan', value: bar + `  **${newLevelLabel}**`, inline: false }
             )
             .setTimestamp()
             .setFooter({ text: 'System Pochwał · Pizzeria' });
 
-        const logChannel = interaction.guild.channels.cache.get(config.channels.plusy);
-        if (logChannel) await logChannel.send({ content: `${target}`, embeds: [embed] });
-
-        // Alert zarządu przy 5/5
-        if (newLevel === plusy.length - 1) {
-            const alertEmbed = new EmbedBuilder()
-                .setColor(0xe74c3c)
-                .setTitle('Pracownik ma 5/5 Plusów!')
-                .setDescription(`${target} osiągnął(a) maksymalną liczbę plusów.`)
-                .addFields(
-                    { name: 'Pracownik', value: `${target}`, inline: true },
-                    { name: 'Ostatni powód', value: powod, inline: true }
-                )
-                .setTimestamp()
-                .setFooter({ text: 'System Pochwał · Pizzeria' });
-
-            const zarzadChannel = interaction.guild.channels.cache.get(config.channels.kanalZarzadu);
-            if (zarzadChannel) await zarzadChannel.send({ embeds: [alertEmbed] });
+        const logChannelId = config.channels.plusy;
+        const logChannel = interaction.guild.channels.cache.get(logChannelId);
+        if (logChannel) {
+            await logChannel.send({ content: `${target}`, embeds: [embed] });
         }
 
-        await interaction.editReply(`✅ Nadano plus **${levelLabel}** dla ${target}.`);
+        await interaction.editReply(`✅ Usunięto plusa dla ${target}. Nowy stan: **${newLevelLabel}**.`);
     }
 };

@@ -76,7 +76,7 @@ module.exports = {
             .setFooter({ text: 'System Pochwał · Pizzeria' });
 
         const logChannel = interaction.guild.channels.cache.get(config.channels.pochwaly);
-        if (logChannel) await logChannel.send({ embeds: [embed] });
+        if (logChannel) await logChannel.send({ content: `${target}`, embeds: [embed] });
 
         // Przy 2/2 → automatyczny plus
         if (newLevel === pochwaly.length - 1) {
@@ -118,7 +118,7 @@ module.exports = {
                         .setFooter({ text: 'System Pochwał · Pizzeria' });
 
                     const plusChannel = interaction.guild.channels.cache.get(config.channels.plusy);
-                    if (plusChannel) await plusChannel.send({ embeds: [plusEmbed] });
+                    if (plusChannel) await plusChannel.send({ content: `${target}`, embeds: [plusEmbed] });
 
                     // Alert zarządu przy 5/5 plusów
                     if (newPlusLevel === plusy.length - 1) {

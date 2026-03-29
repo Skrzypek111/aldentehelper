@@ -68,7 +68,7 @@ module.exports = {
             .setFooter({ text: 'System HR · Pizzeria' });
 
         const logChannel = interaction.guild.channels.cache.get(config.channels.degrady);
-        if (logChannel) await logChannel.send({ embeds: [embed] });
+        if (logChannel) await logChannel.send({ content: `${target}`, embeds: [embed] });
 
         await interaction.editReply(`✅ **${target.nickname || target.user.username}** został(a) zdegradowany/a do <@&${pracownicze[newIndex]}>.`);
     }
