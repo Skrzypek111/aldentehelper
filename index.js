@@ -130,8 +130,25 @@ client.on('interactionCreate', async interaction => {
     const oldNick = target.nickname || target.user.username;
 
     try {
-      // Usuń wszystkie rangi i nadaj tylko domyślną (klient)
-      await target.roles.set([config.roles.domyslna]).catch(() => { });
+      // Zbierz wszystkie ID ról z config (oprócz domyślnej i komentarzy)
+      const allConfigRoles = [];
+      for (const [key, value] of Object.entries(config.roles)) {
+        if (key === 'domyslna' || key.startsWith('_')) continue;
+        if (Array.isArray(value)) {
+          allConfigRoles.push(...value);
+        } else if (typeof value === 'string') {
+          allConfigRoles.push(value);
+        }
+      }
+
+      // Usuń te, które użytkownik faktycznie posiada
+      const toRemove = allConfigRoles.filter(id => target.roles.cache.has(id));
+      for (const roleId of toRemove) {
+        await target.roles.remove(roleId).catch(() => { });
+      }
+
+      // Nadaj domyślną rangę (klient)
+      await target.roles.add(config.roles.domyslna).catch(() => { });
 
       // Czyścimy dane jeśli użytkownik był na urlopie
       if (config.roles.urlop) {
