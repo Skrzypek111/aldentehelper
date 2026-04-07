@@ -111,6 +111,76 @@ client.on('interactionCreate', async interaction => {
     return;
   }
 
+  // ── Modal: wypowiedzenie_modal ──────────────────────────────────────────────
+  if (interaction.isModalSubmit() && interaction.customId === 'wypowiedzenie_modal') {
+    const listPozegnalny = interaction.fields.getTextInputValue('wypowiedzenie_list');
+    const target = interaction.member;
+
+    const pracownicze = config.roles.pracownicze;
+    let currentRankId = null;
+
+    // Znajdź aktualną rangę pracowniczą (najwyższą z listy)
+    for (let i = pracownicze.length - 1; i >= 0; i--) {
+      if (target.roles.cache.has(pracownicze[i])) {
+        currentRankId = pracownicze[i];
+        break;
+      }
+    }
+
+    const oldNick = target.nickname || target.user.username;
+
+    // Logika usuwania ról (jak w zwolnij.js)
+    const rolesToRemove = [
+      config.roles.kadrowa,
+      config.roles.oczekujacy,
+      ...config.roles.pracownicze,
+      ...config.roles.minusy,
+      ...config.roles.plusy,
+      ...config.roles.upomnienia,
+      ...config.roles.pochwaly,
+    ].filter(id => id && target.roles.cache.has(id));
+
+    try {
+      for (const roleId of rolesToRemove) {
+        await target.roles.remove(roleId).catch(() => { });
+      }
+      // Zdejmij też rangę urlopową jeśli ma
+      if (config.roles.urlop && target.roles.cache.has(config.roles.urlop)) {
+        await target.roles.remove(config.roles.urlop).catch(() => { });
+        // Usuń z pliku urlopów
+        const urlopyData = loadUrlopyData();
+        if (urlopyData[target.id]) {
+          delete urlopyData[target.id];
+          saveUrlopyData(urlopyData);
+        }
+      }
+
+      // Zostaw domyślną rangę klienta
+      await target.roles.add(config.roles.domyslna).catch(() => { });
+      // Zresetuj nick
+      await target.setNickname(null).catch(() => { });
+    } catch (err) {
+      console.error('❌ Błąd podczas przetwarzania wypowiedzenia:', err);
+    }
+
+    const embed = new EmbedBuilder()
+      .setColor(0xe74c3c)
+      .setTitle('Odejście z Pracy (Wypowiedzenie)')
+      .addFields(
+        { name: 'Osoba', value: `${target} (${oldNick})`, inline: true },
+        { name: 'Poprzedni stopień', value: currentRankId ? `<@&${currentRankId}>` : 'Brak', inline: true },
+        { name: 'List pożegnalny', value: listPozegnalny, inline: false }
+      )
+      .setTimestamp()
+      .setFooter({ text: 'System HR · Pizzeria' });
+
+    const logChannel = interaction.guild.channels.cache.get(config.channels.wypowiedzenia);
+    if (logChannel) await logChannel.send({ embeds: [embed] });
+
+    await interaction.reply({ content: '✅ Twoje wypowiedzenie zostało przyjęte. Powodzenia w dalszej drodze!', ephemeral: true });
+    return;
+  }
+
   // ── Button: zakoncz_urlop_<userId> ─────────────────────────────────────────
   if (interaction.isButton() && interaction.customId.startsWith('zakoncz_urlop_')) {
     const ownerId = interaction.customId.replace('zakoncz_urlop_', '');
