@@ -159,8 +159,14 @@ client.on('interactionCreate', async interaction => {
       .setTimestamp()
       .setFooter({ text: 'System HR · Pizzeria' });
 
-    const logChannel = interaction.guild.channels.cache.get(config.channels.wypowiedzenia);
-    if (logChannel) await logChannel.send({ embeds: [embed] });
+    const logChannel = await interaction.guild.channels.fetch(config.channels.wypowiedzenia).catch(() => null);
+    if (logChannel) {
+      await logChannel.send({ embeds: [embed] }).catch(err => {
+        console.error('❌ Błąd podczas wysyłania embeda wypowiedzenia:', err);
+      });
+    } else {
+      console.error(`❌ Nie znaleziono kanału wypowiedzeń o ID: ${config.channels.wypowiedzenia}`);
+    }
 
     await interaction.reply({ content: '✅ Twoje wypowiedzenie zostało przyjęte. Powodzenia w dalszej drodze!', ephemeral: true });
     return;
