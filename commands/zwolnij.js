@@ -29,21 +29,10 @@ module.exports = {
 
         const oldNick = target.nickname || target.user.username;
 
-        // Zbierz wszystkie rangi do usunięcia
-        const rolesToRemove = [
-            config.roles.kadrowa,
-            config.roles.oczekujacy,
-            ...config.roles.pracownicze,
-            ...config.roles.minusy,
-            ...config.roles.plusy,
-        ].filter(id => id && target.roles.cache.has(id));
-
         try {
-            for (const roleId of rolesToRemove) {
-                await target.roles.remove(roleId).catch(() => { });
-            }
-            // Zostaw domyślną rangę klienta
-            await target.roles.add(config.roles.domyslna).catch(() => { });
+            // Ustaw tylko domyślną rangę (usuwa wszystkie inne, które bot może usunąć)
+            await target.roles.set([config.roles.domyslna]).catch(() => { });
+            
             // Zresetuj nick
             await target.setNickname(null).catch(() => { });
         } catch (err) {

@@ -129,25 +129,12 @@ client.on('interactionCreate', async interaction => {
 
     const oldNick = target.nickname || target.user.username;
 
-    // Logika usuwania ról (jak w zwolnij.js)
-    const rolesToRemove = [
-      config.roles.kadrowa,
-      config.roles.oczekujacy,
-      ...config.roles.pracownicze,
-      ...config.roles.minusy,
-      ...config.roles.plusy,
-      ...config.roles.upomnienia,
-      ...config.roles.pochwaly,
-    ].filter(id => id && target.roles.cache.has(id));
-
     try {
-      for (const roleId of rolesToRemove) {
-        await target.roles.remove(roleId).catch(() => { });
-      }
-      // Zdejmij też rangę urlopową jeśli ma
-      if (config.roles.urlop && target.roles.cache.has(config.roles.urlop)) {
-        await target.roles.remove(config.roles.urlop).catch(() => { });
-        // Usuń z pliku urlopów
+      // Usuń wszystkie rangi i nadaj tylko domyślną (klient)
+      await target.roles.set([config.roles.domyslna]).catch(() => { });
+
+      // Czyścimy dane jeśli użytkownik był na urlopie
+      if (config.roles.urlop) {
         const urlopyData = loadUrlopyData();
         if (urlopyData[target.id]) {
           delete urlopyData[target.id];
@@ -155,8 +142,6 @@ client.on('interactionCreate', async interaction => {
         }
       }
 
-      // Zostaw domyślną rangę klienta
-      await target.roles.add(config.roles.domyslna).catch(() => { });
       // Zresetuj nick
       await target.setNickname(null).catch(() => { });
     } catch (err) {
