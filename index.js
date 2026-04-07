@@ -129,6 +129,30 @@ client.on('interactionCreate', async interaction => {
 
     const oldNick = target.nickname || target.user.username;
 
+    // Najpierw przygotuj i wyślij embed (zanim zdejmiemy role, żeby mieć pewność że się wyśle)
+    const embed = new EmbedBuilder()
+      .setColor(0xe74c3c)
+      .setTitle('Odejście z Pracy (Wypowiedzenie)')
+      .addFields(
+        { name: 'Osoba', value: `${target} (${oldNick})`, inline: true },
+        { name: 'Poprzedni stopień', value: currentRankId ? `<@&${currentRankId}>` : 'Brak', inline: true },
+        { name: 'List pożegnalny', value: listPozegnalny, inline: false }
+      )
+      .setTimestamp()
+      .setFooter({ text: 'System HR · Pizzeria' });
+
+    try {
+      const logChannel = await interaction.guild.channels.fetch(config.channels.wypowiedzenia).catch(() => null);
+      if (logChannel) {
+        await logChannel.send({ embeds: [embed] });
+      } else {
+        console.error(`❌ Nie znaleziono kanału wypowiedzeń ID: ${config.channels.wypowiedzenia}`);
+      }
+    } catch (err) {
+      console.error('❌ Błąd podczas wysyłania embeda wypowiedzenia:', err);
+    }
+
+    // Teraz usuwamy role
     try {
       // Zbierz wszystkie ID ról z config (oprócz domyślnej i komentarzy)
       const allConfigRoles = [];
@@ -162,27 +186,7 @@ client.on('interactionCreate', async interaction => {
       // Zresetuj nick
       await target.setNickname(null).catch(() => { });
     } catch (err) {
-      console.error('❌ Błąd podczas przetwarzania wypowiedzenia:', err);
-    }
-
-    const embed = new EmbedBuilder()
-      .setColor(0xe74c3c)
-      .setTitle('Odejście z Pracy (Wypowiedzenie)')
-      .addFields(
-        { name: 'Osoba', value: `${target} (${oldNick})`, inline: true },
-        { name: 'Poprzedni stopień', value: currentRankId ? `<@&${currentRankId}>` : 'Brak', inline: true },
-        { name: 'List pożegnalny', value: listPozegnalny, inline: false }
-      )
-      .setTimestamp()
-      .setFooter({ text: 'System HR · Pizzeria' });
-
-    const logChannel = await interaction.guild.channels.fetch(config.channels.wypowiedzenia).catch(() => null);
-    if (logChannel) {
-      await logChannel.send({ embeds: [embed] }).catch(err => {
-        console.error('❌ Błąd podczas wysyłania embeda wypowiedzenia:', err);
-      });
-    } else {
-      console.error(`❌ Nie znaleziono kanału wypowiedzeń o ID: ${config.channels.wypowiedzenia}`);
+      console.error('❌ Błąd podczas przetwarzania roli w wypowiedzeniu:', err);
     }
 
     await interaction.reply({ content: '✅ Twoje wypowiedzenie zostało przyjęte. Powodzenia w dalszej drodze!', ephemeral: true });
