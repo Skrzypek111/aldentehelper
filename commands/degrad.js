@@ -3,11 +3,15 @@ const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('disc
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('degrad')
-        .setDescription('Degraduje pracownika o jeden stopień')
+        .setDescription('Degraduje pracownika na wybrany stopień lub o jeden poziom w dół')
         .addUserOption(o => o
             .setName('uzytkownik')
             .setDescription('Osoba do degradacji')
             .setRequired(true))
+        .addRoleOption(o => o
+            .setName('ranga')
+            .setDescription('Stopień, na który zdegradować (opcjonalnie)')
+            .setRequired(false))
         .addStringOption(o => o
             .setName('powod')
             .setDescription('Powód degradacji (opcjonalnie)')
@@ -23,6 +27,7 @@ module.exports = {
         await interaction.deferReply({ ephemeral: true });
 
         const target = interaction.options.getMember('uzytkownik');
+        const selectedRole = interaction.options.getRole('ranga');
         const powod = interaction.options.getString('powod') || 'Brak podanego powodu';
 
         if (!target) return interaction.editReply('❌ Nie znaleziono użytkownika na serwerze.');
@@ -38,21 +43,38 @@ module.exports = {
             }
         }
 
-        if (currentIndex === -1) {
-            return interaction.editReply('⚠️ Użytkownik nie ma żadnej rangi pracowniczej.');
-        }
-        if (currentIndex === 0) {
-            return interaction.editReply('⚠️ Pracownik jest już na **najniższej randze**. Degradacja niemożliwa. Użyj `/zwolnij` jeśli chcesz go usunąć.');
-        }
+        let newIndex = -1;
 
-        const newIndex = currentIndex - 1;
+        if (selectedRole) {
+            // Szukamy wybranej rangi w konfiguracji
+            newIndex = pracownicze.indexOf(selectedRole.id);
+            if (newIndex === -1) {
+                return interaction.editReply('⚠️ Wybrana ranga nie jest częścią systemu rang pracowniczych.');
+            }
+            if (currentIndex !== -1 && newIndex === currentIndex) {
+                return interaction.editReply('⚠️ Pracownik ma już tę rangę.');
+            }
+        } else {
+            // Degradacja o jeden w dół
+            if (currentIndex === -1) {
+                return interaction.editReply('⚠️ Użytkownik nie ma żadnej rangi pracowniczej. Wybierz rangę ręcznie.');
+            }
+            if (currentIndex === 0) {
+                return interaction.editReply('⚠️ Pracownik jest już na **najniższej randze**. Degradacja niemożliwa. Użyj `/zwolnij` jeśli chcesz go usunąć.');
+            }
+            newIndex = currentIndex - 1;
+        }
 
         try {
-            await target.roles.remove(pracownicze[currentIndex]);
+            // Usuń obecną rangę (jeśli posiada)
+            if (currentIndex !== -1) {
+                await target.roles.remove(pracownicze[currentIndex]);
+            }
+            // Nadaj nową
             await target.roles.add(pracownicze[newIndex]);
         } catch (err) {
             console.error(err);
-            return interaction.editReply('❌ Błąd podczas zmiany ról.');
+            return interaction.editReply('❌ Błąd podczas zmiany ról. Sprawdź hierarchię bota.');
         }
 
         const embed = new EmbedBuilder()
@@ -61,7 +83,7 @@ module.exports = {
             .addFields(
                 { name: 'Pracownik', value: `${target}`, inline: true },
                 { name: 'Przez', value: `${interaction.user}`, inline: true },
-                { name: 'Zmiana rangi', value: `<@&${pracownicze[currentIndex]}> → <@&${pracownicze[newIndex]}>`, inline: false },
+                { name: 'Zmiana rangi', value: currentIndex !== -1 ? `<@&${pracownicze[currentIndex]}> → <@&${pracownicze[newIndex]}>` : `Brak → <@&${pracownicze[newIndex]}>`, inline: false },
                 { name: 'Powód', value: powod, inline: false }
             )
             .setTimestamp()

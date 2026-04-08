@@ -12,6 +12,10 @@ module.exports = {
             .setName('nick_w_grze')
             .setDescription('Imię i nazwisko gracza w GTA RP')
             .setRequired(true))
+        .addRoleOption(o => o
+            .setName('ranga')
+            .setDescription('Stopień, na który zatrudnić (opcjonalnie)')
+            .setRequired(false))
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles),
 
     async execute(interaction, config) {
@@ -25,14 +29,23 @@ module.exports = {
 
         const target = interaction.options.getMember('uzytkownik');
         const nick = interaction.options.getString('nick_w_grze');
+        const selectedRole = interaction.options.getRole('ranga');
 
         if (!target) return interaction.editReply('❌ Nie znaleziono użytkownika na serwerze.');
+
+        let rankToAssign = config.roles.pracownicze[0];
+        if (selectedRole) {
+            if (!config.roles.pracownicze.includes(selectedRole.id)) {
+                return interaction.editReply('⚠️ Wybrana ranga nie jest częścią systemu rang pracowniczych.');
+            }
+            rankToAssign = selectedRole.id;
+        }
 
         try {
             // Nadaj rangę kadrową
             await target.roles.add(config.roles.kadrowa).catch(() => { });
-            // Nadaj najniższą rangę pracowniczą
-            await target.roles.add(config.roles.pracownicze[0]).catch(() => { });
+            // Nadaj wybraną lub najniższą rangę pracowniczą
+            await target.roles.add(rankToAssign).catch(() => { });
             // Usuń rangę oczekującego
             await target.roles.remove(config.roles.oczekujacy).catch(() => { });
             // Zmień nick
@@ -48,7 +61,7 @@ module.exports = {
             .addFields(
                 { name: 'Pracownik', value: `${target} (${nick})`, inline: true },
                 { name: 'Przez', value: `${interaction.user}`, inline: true },
-                { name: 'Ranga startowa', value: `<@&${config.roles.pracownicze[0]}>`, inline: false }
+                { name: 'Ranga startowa', value: `<@&${rankToAssign}>`, inline: false }
             )
             .setTimestamp()
             .setFooter({ text: 'System HR · Pizzeria' });
@@ -56,6 +69,6 @@ module.exports = {
         const logChannel = interaction.guild.channels.cache.get(config.channels.zatrudnienia);
         if (logChannel) await logChannel.send({ embeds: [embed] });
 
-        await interaction.editReply(`✅ **${nick}** został(a) pomyślnie zatrudniony/a!`);
+        await interaction.editReply(`✅ **${nick}** został(a) pomyślnie zatrudniony/a na stopień <@&${rankToAssign}>!`);
     }
 };
