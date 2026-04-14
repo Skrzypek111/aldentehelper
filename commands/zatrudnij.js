@@ -19,8 +19,8 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles),
 
     async execute(interaction, config) {
-        // Sprawdź uprawnienia zarządu
-        const hasRole = interaction.member.roles.cache.some(r => config.roles.zarzad.includes(r.id));
+        // Sprawdź uprawnienia (Top 4 management)
+        const hasRole = interaction.member.roles.cache.some(r => config.roles.pracownicze.slice(-4).includes(r.id));
         if (!hasRole) {
             return interaction.reply({ content: '❌ Brak uprawnień do używania tej komendy.', ephemeral: true });
         }

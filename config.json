@@ -1,6 +1,6 @@
 {
     "roles": {
-        "_komentarz_zarzad": "Tylko 3 ostatnie rangi zarzadu moga uzywac komend HR (/zatrudnij, /zwolnij, /awans, /degrad)",
+        "_komentarz_zarzad": "Komendy HR: /zatrudnij i /wypłata (Top 4), /zwolnij, /awans, /degrad (Top 3)",
         "zarzad": [
             "1346801911956770818",
             "1483553549496614923",
