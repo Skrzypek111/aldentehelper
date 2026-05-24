@@ -15,7 +15,10 @@ module.exports = {
 
     async execute(interaction, config) {
         // Sprawdź uprawnienia Top 4
-        const hasRole = interaction.member.roles.cache.some(r => config.roles.pracownicze.slice(-4).includes(r.id));
+        const hasRole = interaction.member.roles.cache.some(r => 
+            config.roles.pracownicze.slice(-4).includes(r.id) || 
+            config.roles.zarzad.includes(r.id)
+        );
         if (!hasRole) {
             return interaction.reply({ content: '❌ Brak uprawnień do używania tej komendy.', ephemeral: true });
         }

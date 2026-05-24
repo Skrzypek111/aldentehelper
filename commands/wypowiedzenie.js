@@ -13,7 +13,10 @@ module.exports = {
 
     async execute(interaction, config) {
         // Sprawdź czy użytkownik ma rolę pracowniczą
-        const hasPracownicza = interaction.member.roles.cache.some(r => config.roles.pracownicze.includes(r.id));
+        const hasPracownicza = interaction.member.roles.cache.some(r => 
+            config.roles.pracownicze.includes(r.id) || 
+            config.roles.zarzad.includes(r.id)
+        );
         if (!hasPracownicza) {
             return interaction.reply({ content: '❌ Tylko pracownicy mogą złożyć wypowiedzenie.', ephemeral: true });
         }

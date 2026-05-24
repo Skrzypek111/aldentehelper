@@ -65,10 +65,20 @@ module.exports = {
             newIndex = currentIndex + 1;
         }
 
+        const rolesToRemove = [];
+        if (currentIndex !== -1) {
+            rolesToRemove.push(pracownicze[currentIndex]);
+        }
+
+        // Zresetuj plusy i pochwały po awansie
+        const plusy = config.roles.plusy || [];
+        const pochwaly = config.roles.pochwaly || [];
+        const toReset = [...plusy, ...pochwaly].filter(roleId => target.roles.cache.has(roleId));
+        rolesToRemove.push(...toReset);
+
         try {
-            // Usuń obecną rangę (jeśli posiada)
-            if (currentIndex !== -1) {
-                await target.roles.remove(pracownicze[currentIndex]);
+            if (rolesToRemove.length > 0) {
+                await target.roles.remove(rolesToRemove);
             }
             // Nadaj nową
             await target.roles.add(pracownicze[newIndex]);
