@@ -1,0 +1,6 @@
+node_modules
+.env
+token.txt
+urlopy_data.json
+package-lock.json
+*.log
